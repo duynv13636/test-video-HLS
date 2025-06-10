@@ -1,53 +1,80 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <video height="600" id="video" autoplay autoplay muted playsinline></video>
+    <pre id="log" style="background: #000; color: #0f0; padding: 10px"></pre>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/0.5.14/hls.min.js"
+      integrity="sha512-js37JxjD6gtmJ3N2Qzl9vQm4wcmTilFffk0nTSKzgr3p6aitg73LR205203wTzCCC/NZYO2TAxSa0Lr2VMLQvQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/0.5.14/hls.js"
+      integrity="sha512-Uxb1LSW1XkMpEWsi4HguYGAHbXnNP5h0On1bBlSOZmEe42ajm2TCVy6khtfr5jFfjlToaG/mrN6R5zslmOCnAg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      const log = (msg) => {
+        console.log(msg);
+        const logDiv = document.getElementById("log");
+        if (logDiv) logDiv.textContent += msg + "\n";
+      };
+
+      log("Bắt đầu phát video");
+      var video = document.getElementById("video");
+      if (Hls.isSupported()) {
+        var hls = new Hls({
+          debug: true,
+        });
+        hls.loadSource("video/mobile.m3u8");
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MEDIA_ATTACHED, function () {
+          log("MEDIA_ATTACHED");
+          video.muted = true;
+          video.play();
+          log("load video success.");
+        });
+        hls.on(Hls.Events.ERROR, function (event, data) {
+          log("ERROR: " + JSON.stringify(data));
+        });
+      }
+      // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
+      // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element through the `src` property.
+      // This is using the built-in support of the plain video element, without using hls.js.
+      else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+        log("Bắt đầu phát video tren IPhone");
+        video.src = "video/mobile.m3u8";
+        video.addEventListener("canplay", function () {
+          video.play();
+          video.muted = true;
+        });
+      } else {
+        log("HLS không được hỗ trợ");
+      }
+    </script>
+  </body>
+</html> -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
-    <video height="600" id="video" autoplay preload="auto"></video>
-    <pre id="log" style="background:#000; color:#0f0; padding:10px;"></pre>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/0.5.14/hls.min.js" integrity="sha512-js37JxjD6gtmJ3N2Qzl9vQm4wcmTilFffk0nTSKzgr3p6aitg73LR205203wTzCCC/NZYO2TAxSa0Lr2VMLQvQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/0.5.14/hls.js" integrity="sha512-Uxb1LSW1XkMpEWsi4HguYGAHbXnNP5h0On1bBlSOZmEe42ajm2TCVy6khtfr5jFfjlToaG/mrN6R5zslmOCnAg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
-       const log = (msg) => {
-      console.log(msg);
-      const logDiv = document.getElementById('log');
-      if (logDiv) logDiv.textContent += msg + '\n';
-    };
+  </head>
+  <body>
+    <video id="video" controls autoplay muted playsinline></video>
 
-    log("Bắt đầu phát video");
-        var video = document.getElementById('video');
-        if (Hls.isSupported()) {
-          var hls = new Hls({
-            debug: true,
-          });
-          hls.loadSource('video/mobile.m3u8');
-          hls.attachMedia(video);
-          hls.on(Hls.Events.MEDIA_ATTACHED, function () {
-            log("MEDIA_ATTACHED");
-            video.muted = true;
-            video.play();
-            log("load video success.");
-          });
-          hls.on(Hls.Events.ERROR, function (event, data) {
-        log("ERROR: " + JSON.stringify(data));
-      });
-        }
-        // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
-        // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element through the `src` property.
-        // This is using the built-in support of the plain video element, without using hls.js.
-        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-          log("Bắt đầu phát video tren IPhone");
-          video.src = 'video/mobile.m3u8';
-          video.addEventListener('canplay', function () {
-            video.play();
-            video.muted = true;
-          });
-        } else {
-          log("HLS không được hỗ trợ");
-        }
-      </script>
-</body>
+    <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
+    <script>
+      const player = dashjs.MediaPlayer().create();
+      player.initialize(document.getElementById("video"), "video/video.mpd", true);
+    </script>
+  </body>
 </html>
